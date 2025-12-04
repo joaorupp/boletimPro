@@ -1,45 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Boletim Pro - Réplica Exata</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<!-- Formulário -->
-<form onsubmit="event.preventDefault();"> <label>Nome da Matéria</label><br>
-    <input type="text" placeholder="Ex: Matemática" style="width: 300px;"><br><br>
 
-    <label>Média Mínima</label><br>
-    <input type="number" id="media-minima" value="7" step="0.1" style="width: 300px;"><br><br>
-
-    <div style="display: flex; justify-content: space-between; width: 300px; align-items: center;">
-        <label><strong>Notas e Pesos</strong></label>
-        <button type="button" id="btn-add">+ Adicionar Nota</button>
-    </div>
-    <br>
-
-    <div id="lista-notas"></div>
-    
-    <small>Peso: Importância da nota no cálculo (padrão: 1)</small><br><br>
-
-    <div id="painel-previsao" style="background: #fdf2f8; padding: 10px; border-radius: 4px; border: 1px solid #fbcfe8; display: none;">
-        <strong> Quanto preciso tirar na próxima?</strong><br>
-        <span id="texto-previsao"></span>
-    </div>
-    <br>
-
-    <button type="submit"><strong>+ Salvar Matéria (Simulado)</strong></button><br><br>
-
-    <fieldset style="width: 300px;">
-        <div id="resultado-painel">
-            Aguardando notas...
+    <header class="header-principal">
+        <h1><i class="fas fa-graduation-cap"></i> Boletim Pro</h1>
+        <p>Tenha o controle total da sua aprovação escolar</p>
+        <div class="media-geral-card-topo">
+            <span>MÉDIA GERAL</span>
+            <div>8.8</div>
         </div>
-    </fieldset>
-</form>
-<!-- Fim do Formulário -->
+    </header>
+
+    <div class="main-content-wrapper">
+        
+        <div class="metricas-cartoes">
+            <div class="cartao-metrica verde">
+                <p>Melhor Desempenho</p>
+                <h3>8.8</h3>
+                <span>Matemática</span>
+            </div>
+            <div class="cartao-metrica laranja">
+                <p>Precisa de Atenção</p>
+                <h3>8.8</h3>
+                <span>Matemática</span>
+            </div>
+            <div class="cartao-metrica azul">
+                <p>Taxa de Aprovação</p>
+                <h3>100%</h3>
+                <span>1 de 1 matérias</span>
+            </div>
+            <div class="cartao-metrica roxo">
+                <p>Status Geral</p>
+                <p>✔ 1 Aprovado(s)</p>
+                <p>⚠ 0 Recuperação</p>
+                <p>✖ 0 Reprovado(s)</p>
+            </div>
+        </div>
+
+        <div class="secoes-wrapper">
+            
+            <section class="cadastro-area-adaptada">
+                <div class="area-titulo"><i class="fas fa-book-open"></i> Cadastrar Matéria</div>
+                
+                <form onsubmit="event.preventDefault();"> 
+                    <label>Nome da Matéria</label>
+                    <input type="text" placeholder="Ex: Matemática">
+
+                    <label>Média Mínima para Aprovação</label>
+                    <input type="number" id="media-minima" value="7" step="0.1">
+
+                    <div class="notas-pesos-header">
+                        <label><strong>Notas e Pesos</strong></label>
+                        <button type="button" id="btn-add"><i class="fas fa-plus"></i> Adicionar Nota</button>
+                    </div>
+
+                    <div id="lista-notas">
+                        <div class="nota-group-simulada">
+                            <input type="number" value="8.0">
+                            <input type="number" value="1" placeholder="Peso">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                        <div class="nota-group-simulada">
+                            <input type="number" value="9.6">
+                            <input type="number" value="1" placeholder="Peso">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                    </div>
+                    
+                    <small>Peso: Importância da nota no cálculo (padrão: 1)</small>
+
+                    <div class="painel-previsao-adaptado">
+                        <label>Quanto preciso tirar?</label>
+                        <span id="texto-previsao-adaptado">Para atingir 7, sua próxima nota (peso 1) precisa ser: 21.0</span>
+                    </div>
+
+                    <button type="submit" class="btn-adicionar-materia"><i class="fas fa-plus"></i> Adicionar Matéria</button>
+
+                    <div class="fieldset-status-adaptado">
+                        <ul>
+                            <li style="color: var(--cor-cartao-verde);"><i class="fas fa-circle"></i> Aprovado: Média $\ge$ 7.0</li>
+                            <li style="color: var(--cor-cartao-laranja);"><i class="fas fa-circle"></i> Recuperação: Média 5.0 - 6.9</li>
+                            <li style="color: var(--cor-reprovado);"><i class="fas fa-circle"></i> Reprovado: Média $\le$ 5.0</li>
+                        </ul>
+                    </div>
+                </form>
+            </section>
+
+            <section class="boletim-area-adaptada">
+                <div class="boletim-header">
+                    <div class="boletim-titulo"><i class="fas fa-clipboard-list"></i> Seu Boletim</div>
+                    <button class="btn-limpar-tudo"><i class="fas fa-trash-alt"></i> Limpar Tudo</button>
+                </div>
+                
+                <div class="boletim-filtros">
+                    <span>Filtrar:</span>
+                    <select><option>Todos</option></select>
+                    <span>Ordenar por:</span>
+                    <select><option>Nome</option></select>
+                </div>
+
+                <div class="boletim-conteudo">
+                    <table class="tabela-boletim">
+                        <thead>
+                            <tr>
+                                <th>Matéria</th>
+                                <th>Nº Notas</th>
+                                <th>Média</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="materia-aprovada">
+                                <td><i class="fas fa-chevron-down"></i> Matemática</td>
+                                <td>3</td>
+                                <td class="media-aprovada">8.8</td>
+                                <td class="media-aprovada">Aprovado</td>
+                                <td><i class="fas fa-edit icon-edit"></i> <i class="fas fa-trash-alt icon-trash"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="resumo-status-tabela">
+                         <span style="color: var(--cor-cartao-verde); font-weight: bold;">• 1 Aprovado(s)</span>
+                         <span style="color: var(--cor-cartao-laranja); margin-left: 15px;">• 0 Recuperação</span>
+                         <span style="color: var(--cor-reprovado); margin-left: 15px;">• 0 Reprovado(s)</span>
+                         <span style="margin-left: 20px;">Total: 1 matéria(s)</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
     <script src="script.js"></script>
-    <p>olá</p>
+    <p style="display: none;">olá</p> 
 </body>
 </html>
