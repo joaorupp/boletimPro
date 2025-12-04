@@ -1,184 +1,26 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Notas</title>
+    <title>Boletim Pro</title>
 </head>
 <body>
-    <!DOCTYPE html>
-    <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Calculadora de Notas</title>
-    </head>
-    <body style="font-family: sans-serif; padding: 20px;">
-    
-        <h3>📖 Cadastrar Matéria</h3>
-    
-        <form onsubmit="event.preventDefault();">
-            
-            <label>Nome da Matéria</label><br>
-            <input type="text" id="input-nome" placeholder="Ex: Matemática" style="width: 300px; margin-bottom: 15px;">
-            <br>
-    
-            <label>Média Mínima para Aprovação</label><br>
-            <input type="number" id="media-minima" value="7" min="0" max="10" step="0.1" style="width: 300px; margin-bottom: 15px;">
-            <br>
-    
-            <div style="width: 300px; margin-bottom: 10px;">
-                <label><strong>Notas e Pesos</strong></label> 
-                <button type="button" id="btn-add" style="float: right;">+ Nota</button>
-            </div>
-    
-            <div id="lista-notas"></div>
-            
-            <small>Notas de 0 a 10. Pesos de 1 a 10.</small>
-            <br><br>
-    
-            <div id="painel-previsao" style="display: none; background: #eee; padding: 10px; margin-bottom: 15px; width: 280px;">
-                🔮 Precisa tirar: <strong id="texto-previsao"></strong>
-            </div>
-    
-            <button type="button" id="btn-salvar" style="width: 305px; padding: 10px; cursor: pointer;">
-                <strong>Salvar Matéria</strong>
-            </button>
-            <br><br>
-    
-            <fieldset style="width: 280px;">
-                <legend>Status</legend>
-                <div id="resultado-painel">Aguardando...</div>
-            </fieldset>
-    
-        </form>
-    
-        <hr>
-    
-        <div id="lista-salvas-container">
-            <h3>🗂️ Matérias Salvas</h3>
-            <ul id="lista-salvas">
-                <li>Nenhuma matéria salva.</li>
-            </ul>
-        </div>
-    
-        <script src="script.js"></script>
-    </body>
-    </html>
-   
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boletim Pro - Gerenciador Escolar</title>
-    <link rel="stylesheet" href="style.css"> 
-</head>
-<body>
-<!-- Header -->
-    <header class="header-container">
-        <div class="header-left">
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-            </svg>
-            
-            <div class="titles">
-                <h1 class="main-title">Boletim Pro</h1>
-                <p class="subtitle">Tenha o controle total da sua aprovação escolar</p>
-            </div>
-        </div>
+    <header>
 
-        <div class="score-card">
-            <span class="score-label">Média Geral</span>
-            <span class="score-value">0.0</span>
-        </div>
     </header>
-<!-- fim da Header -->
 
-<!-- Formulário -->
-<form onsubmit="event.preventDefault();"> <label>Nome da Matéria</label><br>
-    <input type="text" placeholder="Ex: Matemática" style="width: 300px;"><br><br>
+    <main>
+        <section id="cadastra-materia">
 
-    <div id="dashboard-stats" style="display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;">
+        </section>
 
-        <div class="card card-green" style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; width: 200px;">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                <small>Melhor Desempenho</small>
-            </div>
-            <h2 id="dash-best-value" style="margin: 0; font-size: 2em;">--</h2>
-            <p id="dash-best-name" style="margin: 0; color: #666;">Nenhuma matéria</p>
-        </div>
+        <section id="exibe-notas">
 
-        <div class="card card-orange" style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; width: 200px;">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
-                <small>Precisa de Atenção</small>
-            </div>
-            <h2 id="dash-worst-value" style="margin: 0; font-size: 2em;">--</h2>
-            <p id="dash-worst-name" style="margin: 0; color: #666;">Nenhuma matéria</p>
-        </div>
-
-        <div class="card card-blue" style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; width: 200px;">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle></svg>
-                <small>Taxa de Aprovação</small>
-            </div>
-            <h2 id="dash-rate-value" style="margin: 0; font-size: 2em;">0%</h2>
-            <p id="dash-rate-detail" style="margin: 0; color: #666;">0 de 0 matérias</p>
-        </div>
-
-        <div class="card card-purple" style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; width: 200px;">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-                <small>Status Geral</small>
-            </div>
-            <div style="font-size: 0.9em; line-height: 1.5;">
-                <div>✓ <span id="count-aprovado">0</span> Aprovado(s)</div>
-                <div>⚠️ <span id="count-recuperacao">0</span> Recuperação</div>
-                <div>✕ <span id="count-reprovado">0</span> Reprovado(s)</div>
-            </div>
-        </div>
-    </div>
-
-    <div style="display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;">
+        </section>
+    </main>
+    <footer>
         
-        <div style="width: 350px; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-            <h3>📖 Cadastrar Matéria</h3>
-            
-            <label>Nome da Matéria</label><br>
-            <input type="text" id="materia-nome" placeholder="Ex: Matemática" style="width: 100%; margin-bottom: 10px;"><br>
-
-            <label>Média para Aprovação</label><br>
-            <input type="number" id="media-minima" value="7" style="width: 100%; margin-bottom: 10px;"><br>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <small>Notas e Pesos</small>
-                <button type="button" id="btn-add-nota" style="cursor: pointer;">+ Add Nota</button>
-            </div>
-
-            <div id="form-lista-notas"></div>
-
-            <div id="resultado-painel" style="margin-top: 15px; padding: 10px; background: #f9f9f9; text-align: center; border-radius: 5px;">
-                Aguardando notas...
-            </div>
-            <div id="painel-previsao" style="margin-top: 10px; font-size: 0.9em; color: #d97706; display: none;"></div>
-
-            <button type="button" id="btn-salvar-materia" style="width: 100%; margin-top: 20px; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                + Salvar Matéria
-            </button>
-        </div>
-
-        <div style="width: 500px;">
-            <h3>📋 Seu Boletim</h3>
-            <div id="lista-boletim">
-                <p style="color: #888;">Nenhuma matéria cadastrada ainda.</p>
-            </div>
-            <button onclick="actions.limparTudo()" style="margin-top:20px; background: #ef4444; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;">Limpar Tudo</button>
-        </div>
-
-    </div>
-
-    <script src="script.js"></script>
+    </footer>
 </body>
 </html>
