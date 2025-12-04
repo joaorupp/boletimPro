@@ -1,3 +1,95 @@
-body{
-    background-color: aqua;
+/* Reset básico para remover margens padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: white; /* Apenas para visualização se a tela for maior */
+}
+
+/* Container Principal do Header */
+.header-container {
+    display: flex;
+    justify-content: space-between; /* Separa os elementos nas pontas */
+    align-items: center;            /* Centraliza verticalmente */
+    background-color: #0b1120;      /* Azul escuro (Navy) */
+    padding: 24px 40px;
+    width: 100%;
+    border-bottom: 1px solid #1e293b; /* Borda sutil inferior opcional */
+}
+
+/* --- Lado Esquerdo --- */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* Espaço entre ícone e texto */
+}
+
+.icon {
+    width: 38px;
+    height: 38px;
+    color: #ffffff;
+}
+
+.titles {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #94a3b8; /* Cinza azulado claro */
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+/* --- Lado Direito (Card da Nota) --- */
+.score-card {
+    background-color: #1f2937; /* Cinza/Azul levemente mais claro que o fundo */
+    border-radius: 8px;
+    padding: 12px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 140px; /* Garante um tamanho mínimo visual */
+}
+
+.score-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #e2e8f0;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.score-value {
+    font-size: 36px;
+    color: #ef4444; /* Vermelho vibrante */
+    font-weight: 400;
+    line-height: 1;
+}
+
+/* Responsividade para telas de celular */
+@media (max-width: 600px) {
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .score-card {
+        width: 100%; /* Ocupa largura total no mobile */
+        align-items: center; /* Centraliza o texto do card */
+    }
 }
