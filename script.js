@@ -1,122 +1,153 @@
-
-
-// Soma simples de array
+// --- 1. LÓGICA MATEMÁTICA ---
 const sum = (arr) => arr.reduce((acc, curr) => acc + curr, 0);
 
-// Calcula média ponderada: (n1*p1 + n2*p2) / (p1+p2)
 const calcularMediaPonderada = (notas) => {
     const totalPesos = sum(notas.map(n => n.peso));
     const totalValor = sum(notas.map(n => n.valor * n.peso));
     return totalPesos === 0 ? 0 : (totalValor / totalPesos);
 };
 
-// Determina o status baseado na média e na regra de negócio
 const obterStatus = (media, minimo) => {
-    if (media >= minimo) return { texto: "Aprovado", cor: "green", icon: "🟢" };
-    if (media >= 5) return { texto: "Recuperação", cor: "orange", icon: "🟠" };
-    return { texto: "Reprovado", cor: "red", icon: "🔴" };
+    if (media >= minimo) return { texto: "Aprovado", cor: "green" };
+    if (media >= 5) return { texto: "Recuperação", cor: "orange" };
+    return { texto: "Reprovado", cor: "red" };
 };
 
-// Calcula quanto falta para passar (assumindo peso 1 para a próxima prova)
 const calcularNotaNecessaria = (notas, mediaAlvo) => {
     const somaAtual = sum(notas.map(n => n.valor * n.peso));
     const pesoAtual = sum(notas.map(n => n.peso));
-    const pesoProxima = 1; // Assumimos peso 1 para a próxima prova
-    
-    // Fórmula inversa da média ponderada
-    // Alvo = (SomaAtual + X * PesoProx) / (PesoAtual + PesoProx)
-    const notaNecessaria = (mediaAlvo * (pesoAtual + pesoProxima) - somaAtual) / pesoProxima;
-    
-    return Math.max(0, notaNecessaria); // Não retorna negativo
+    // Alvo = (Soma + X*1) / (PesoTotal + 1) => X = Alvo*(PesoTotal+1) - Soma
+    const notaNecessaria = (mediaAlvo * (pesoAtual + 1) - somaAtual);
+    return Math.max(0, notaNecessaria);
 };
 
-
-/**
- * ------------------------------------------------
- * 2. STATE MANAGEMENT (Gerenciamento de Estado)
- * O Estado é imutável. As ações criam um NOVO estado.
- * ------------------------------------------------
- */
-
-// Estado inicial
+// --- 2. ESTADO ---
 let state = {
+    nomeMateria: "",
     mediaMinima: 7,
-    notas: [
-        { id: 1, valor: 0, peso: 1 },
-        { id: 2, valor: 0, peso: 1 }
-    ]
+    notas: [{ id: 1, valor: 0, peso: 1 }],
+    materiasSalvas: [] 
 };
 
-// Função "Reducer"-like para atualizar o estado
 const setState = (newState) => {
-    state = { ...state, ...newState }; // Merge do estado antigo com o novo
-    render(); // A UI reage à mudança de estado
+    state = { ...state, ...newState };
+    render();
 };
 
-// Actions (Ações do usuário)
+// --- 3. AÇÕES ---
 const actions = {
+    atualizarNome: (txt) => setState({ nomeMateria: txt }),
+    
+    atualizarMediaMinima: (val) => {
+        let v = parseFloat(val);
+        if (v > 10) v = 10; // Limite JS
+        setState({ mediaMinima: v });
+    },
+
     adicionarNota: () => {
-        const novaNota = { id: Date.now(), valor: 0, peso: 1 };
-        setState({ notas: [...state.notas, novaNota] });
+        setState({ notas: [...state.notas, { id: Date.now(), valor: 0, peso: 1 }] });
     },
 
-    removerNota: (idParaRemover) => {
-        // Filter cria um novo array sem o item removido (imutabilidade)
-        setState({ notas: state.notas.filter(n => n.id !== idParaRemover) });
+    removerNota: (id) => {
+        setState({ notas: state.notas.filter(n => n.id !== id) });
     },
 
-    atualizarNota: (id, campo, valor) => {
-        // Map cria um novo array com o item modificado
+    atualizarNota: (id, campo, valor, inputElement) => {
+        let num = parseFloat(valor);
+        
+        // --- TRAVA DE LIMITE (O SEGREDO) ---
+        // Se o usuário digitou > 10, forçamos o valor para 10
+        if (num > 10) {
+            num = 10;
+            inputElement.value = 10; // Atualiza o visual na hora
+        }
+        if (num < 0) {
+            num = 0;
+            inputElement.value = 0;
+        }
+        // -----------------------------------
+
         const notasAtualizadas = state.notas.map(nota => 
-            nota.id === id ? { ...nota, [campo]: Number(valor) } : nota
+            nota.id === id ? { ...nota, [campo]: num } : nota
         );
         setState({ notas: notasAtualizadas });
     },
 
-    atualizarMediaMinima: (valor) => {
-        setState({ mediaMinima: Number(valor) });
+    salvarMateria: () => {
+        if (!state.nomeMateria.trim()) return alert("Digite o nome da matéria");
+        
+        const media = calcularMediaPonderada(state.notas);
+        const status = obterStatus(media, state.mediaMinima);
+
+        setState({
+            materiasSalvas: [...state.materiasSalvas, {
+                id: Date.now(),
+                nome: state.nomeMateria,
+                media, status
+            }],
+            // Reset
+            nomeMateria: "",
+            mediaMinima: 7,
+            notas: [{ id: Date.now(), valor: 0, peso: 1 }]
+        });
+    },
+
+    removerSalva: (id) => {
+        setState({ materiasSalvas: state.materiasSalvas.filter(m => m.id !== id) });
     }
 };
 
+// --- 4. RENDERIZAÇÃO ---
+const renderFormulario = () => {
+    // Inputs Estáticos
+    const inputNome = document.getElementById('input-nome');
+    if (document.activeElement !== inputNome) inputNome.value = state.nomeMateria;
+    document.getElementById('media-minima').value = state.mediaMinima;
 
-/**
- * ------------------------------------------------
- * 3. VIEW / DOM (Efeitos Colaterais)
- * Renderiza o HTML baseado puramente no Estado atual.
- * ------------------------------------------------
- */
-
-const renderListaNotas = () => {
+    // Inputs Dinâmicos (Notas)
     const container = document.getElementById('lista-notas');
-    container.innerHTML = ''; // Limpa para redesenhar
+    container.innerHTML = ''; 
 
     state.notas.forEach(nota => {
         const div = document.createElement('div');
-        div.style.marginBottom = '10px';
+        div.style.marginBottom = '5px';
         
-        // Input Nota
+        // INPUT NOTA
         const inputNota = document.createElement('input');
         inputNota.type = 'number';
         inputNota.placeholder = 'Nota';
+        inputNota.style.width = '100px';
+        
+        // LIMITES HTML
+        inputNota.min = "0";
+        inputNota.max = "10";
+        
         inputNota.value = nota.valor;
-        inputNota.oninput = (e) => actions.atualizarNota(nota.id, 'valor', e.target.value);
+        // Passamos o próprio elemento (e.target) para a action poder corrigir o valor visualmente
+        inputNota.oninput = (e) => actions.atualizarNota(nota.id, 'valor', e.target.value, e.target);
 
-        // Input Peso
+        // INPUT PESO
         const inputPeso = document.createElement('input');
         inputPeso.type = 'number';
         inputPeso.placeholder = 'Peso';
-        inputPeso.value = nota.peso;
+        inputPeso.style.width = '60px';
         inputPeso.style.marginLeft = '5px';
-        inputPeso.oninput = (e) => actions.atualizarNota(nota.id, 'peso', e.target.value);
+        
+        // LIMITES HTML
+        inputPeso.min = "1";
+        inputPeso.max = "10";
+        
+        inputPeso.value = nota.peso;
+        inputPeso.oninput = (e) => actions.atualizarNota(nota.id, 'peso', e.target.value, e.target);
 
-        // Botão Remover
-        const btnDelete = document.createElement('button');
-        btnDelete.innerText = '🗑️';
-        btnDelete.type = 'button';
-        btnDelete.style.marginLeft = '5px';
-        btnDelete.onclick = () => actions.removerNota(nota.id);
+        // BOTÃO REMOVER
+        const btnDel = document.createElement('button');
+        btnDel.innerText = 'X';
+        btnDel.type = 'button';
+        btnDel.style.marginLeft = '5px';
+        btnDel.onclick = () => actions.removerNota(nota.id);
 
-        div.append(inputNota, inputPeso, btnDelete);
+        div.append(inputNota, inputPeso, btnDel);
         container.appendChild(div);
     });
 };
@@ -126,41 +157,47 @@ const renderResultados = () => {
     const status = obterStatus(media, state.mediaMinima);
     const necessaria = calcularNotaNecessaria(state.notas, state.mediaMinima);
 
-    // Atualiza Painel de Status
+    // Painel Status
     const painel = document.getElementById('resultado-painel');
-    painel.innerHTML = `
-        <div style="font-family: sans-serif;">
-            <div style="font-size: 1.2em; margin-bottom: 5px;">Média Atual: <strong>${media.toFixed(2)}</strong></div>
-            <div style="color: ${status.cor}; font-weight: bold;">
-                ${status.icon} ${status.texto}
-            </div>
-        </div>
-    `;
+    painel.innerHTML = `Média: <strong>${media.toFixed(2)}</strong> <br> 
+                        <span style="color:${status.cor}">${status.texto}</span>`;
 
-    // Atualiza Painel de Previsão ("Quanto preciso tirar")
-    const painelPrev = document.getElementById('painel-previsao');
-    const textoPrev = document.getElementById('texto-previsao');
-    
-    // Só mostra a previsão se ainda não passou
-    if (media < state.mediaMinima) {
-        painelPrev.style.display = 'block';
-        textoPrev.innerHTML = `Para atingir ${state.mediaMinima}, sua próxima nota (peso 1) precisa ser: <strong>${necessaria.toFixed(1)}</strong>`;
+    // Painel Previsão
+    const divPrev = document.getElementById('painel-previsao');
+    if (media < state.mediaMinima && state.notas.length > 0) {
+        divPrev.style.display = 'block';
+        document.getElementById('texto-previsao').innerText = necessaria.toFixed(1);
     } else {
-        painelPrev.style.display = 'none';
+        divPrev.style.display = 'none';
     }
 };
 
-// Função principal de renderização
-const render = () => {
-    renderListaNotas();
-    renderResultados();
+const renderSalvas = () => {
+    const lista = document.getElementById('lista-salvas');
+    lista.innerHTML = '';
+    if (state.materiasSalvas.length === 0) {
+        lista.innerHTML = '<li>Nenhuma matéria salva.</li>';
+        return;
+    }
+    state.materiasSalvas.forEach(m => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${m.nome}</strong>: ${m.media.toFixed(1)} 
+                        <button onclick="actions.removerSalva(${m.id})" style="margin-left:10px; cursor:pointer;">x</button>`;
+        lista.appendChild(li);
+    });
 };
 
-// Inicialização (Setup dos listeners globais)
+const render = () => {
+    renderFormulario();
+    renderResultados();
+    renderSalvas();
+};
+
+// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-add').onclick = actions.adicionarNota;
+    document.getElementById('btn-salvar').onclick = actions.salvarMateria;
+    document.getElementById('input-nome').oninput = (e) => actions.atualizarNome(e.target.value);
     document.getElementById('media-minima').oninput = (e) => actions.atualizarMediaMinima(e.target.value);
-    
-    // Renderiza a primeira vez
     render();
 });
