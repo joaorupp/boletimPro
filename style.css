@@ -1,3 +1,362 @@
-body{
-    background-color: aqua;
+/* Reset básico para remover margens padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: white; /* Apenas para visualização se a tela for maior */
+}
+
+/* Container Principal do Header */
+.header-container {
+    display: flex;
+    justify-content: space-between; /* Separa os elementos nas pontas */
+    align-items: center;            /* Centraliza verticalmente */
+    background-color: #0b1120;      /* Azul escuro (Navy) */
+    padding: 24px 40px;
+    width: 100%;
+    border-bottom: 1px solid #1e293b; /* Borda sutil inferior opcional */
+}
+
+/* --- Lado Esquerdo --- */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* Espaço entre ícone e texto */
+}
+
+.icon {
+    width: 38px;
+    height: 38px;
+    color: #ffffff;
+}
+
+.titles {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #94a3b8; /* Cinza azulado claro */
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+/* --- Lado Direito (Card da Nota) --- */
+.score-card {
+    background-color: #1f2937; /* Cinza/Azul levemente mais claro que o fundo */
+    border-radius: 8px;
+    padding: 12px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 140px; /* Garante um tamanho mínimo visual */
+}
+
+.score-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #e2e8f0;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.score-value {
+    font-size: 36px;
+    color: #ef4444; /* Vermelho vibrante */
+    font-weight: 400;
+    line-height: 1;
+}
+
+/* Responsividade para telas de celular */
+@media (max-width: 600px) {
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .score-card {
+        width: 100%; /* Ocupa largura total no mobile */
+        align-items: center; /* Centraliza o texto do card */
+/* --- RESET E GERAL --- */
+:root {
+    --primary: #2563eb;       /* Azul botão */
+    --bg-body: #f3f4f6;       /* Fundo cinza claro */
+    --card-green: #10b981;    /* Verde */
+    --card-orange: #f97316;   /* Laranja */
+    --card-blue: #3b82f6;     /* Azul Claro */
+    --card-purple: #8b5cf6;   /* Roxo */
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: var(--bg-body);
+    margin: 0;
+    padding: 40px 20px;
+    color: var(--text-dark);
+}
+
+h2, h3 { margin-top: 0; }
+
+/* --- 1. DASHBOARD (CARDS) --- */
+#dashboard-stats {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.card {
+    flex: 1;
+    min-width: 220px;
+    border-radius: 16px;
+    padding: 25px;
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    border: none !important; /* Remove borda padrão do HTML se houver */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card svg {
+    stroke: white;
+    opacity: 0.8;
+}
+
+.card small {
+    font-size: 0.9rem;
+    font-weight: 500;
+    opacity: 0.9;
+    letter-spacing: 0.5px;
+}
+
+.card h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 10px !important;
+    margin-bottom: 5px !important;
+}
+
+.card p {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 0.9rem;
+}
+
+/* Cores Específicas dos Cards */
+.card-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+.card-orange { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+.card-blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+.card-purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+
+/* Lista dentro do card roxo */
+.card-purple div {
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+}
+
+/* --- 2. ÁREA PRINCIPAL (Formulário e Lista) --- */
+.main-container {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+/* --- FORMULÁRIO --- */
+/* (Alvo a div que envolve o formulário) */
+body > div:last-child > div:first-child {
+    background: white;
+    border: none !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-radius: 12px !important;
+    padding: 30px !important;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+
+input[type="text"], 
+input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    background-color: #f9fafb;
+}
+
+input:focus {
+    border-color: var(--primary);
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Botão adicionar nota (pequeno) */
+#btn-add-nota {
+    background: transparent;
+    border: 1px dashed #cbd5e1;
+    color: var(--primary);
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    transition: 0.2s;
+}
+
+#btn-add-nota:hover {
+    background: #eff6ff;
+    border-color: var(--primary);
+}
+
+/* Botão Salvar (Principal) */
+#btn-salvar-materia {
+    background-color: var(--primary) !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+}
+
+#btn-salvar-materia:hover {
+    background-color: #1d4ed8 !important; /* Azul mais escuro */
+}
+
+/* Lista de inputs (notas) */
+#form-lista-notas div {
+    align-items: center;
+}
+
+#form-lista-notas button {
+    height: 38px; /* Altura igual ao input */
+    width: 38px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 1px;
+}
+
+/* Painel de Previsão */
+#resultado-painel {
+    background-color: #f0f9ff !important;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+    border-radius: 8px !important;
+}
+
+#painel-previsao {
+    background-color: #fffbeb;
+    color: #b45309;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #fcd34d;
+    text-align: center;
+}
+
+/* --- 3. LISTA DE MATÉRIAS (BOLETIM) --- */
+/* (Alvo a div da direita) */
+body > div:last-child > div:last-child {
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+}
+
+/* Item individual da lista */
+#lista-boletim > div {
+    background: white !important;
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 20px !important;
+    transition: transform 0.2s;
+}
+
+#lista-boletim > div:hover {
+    transform: scale(1.01);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+#lista-boletim strong {
+    font-size: 1.1rem;
+    color: var(--text-dark);
+}
+
+/* Botão lixeira da lista */
+#lista-boletim button {
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    font-size: 1.2rem;
+}
+
+#lista-boletim button:hover {
+    opacity: 1;
+    color: #ef4444;
+}
+
+/* Botão Limpar Tudo */
+button[onclick="actions.limparTudo()"] {
+    width: 100%;
+    margin-top: 15px;
+    background-color: #fee2e2 !important;
+    color: #ef4444 !important;
+    font-weight: 600;
+    padding: 10px !important;
+    border-radius: 8px !important;
+}
+
+button[onclick="actions.limparTudo()"]:hover {
+    background-color: #fecaca !important;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    #dashboard-stats {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .card {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    body > div:last-child {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    body > div:last-child > div {
+        width: 100% !important;
+        max-width: 400px;
+    }
 }
