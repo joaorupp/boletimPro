@@ -1,4 +1,71 @@
 <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Notas</title>
+</head>
+<body>
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Calculadora de Notas</title>
+    </head>
+    <body style="font-family: sans-serif; padding: 20px;">
+    
+        <h3>📖 Cadastrar Matéria</h3>
+    
+        <form onsubmit="event.preventDefault();">
+            
+            <label>Nome da Matéria</label><br>
+            <input type="text" id="input-nome" placeholder="Ex: Matemática" style="width: 300px; margin-bottom: 15px;">
+            <br>
+    
+            <label>Média Mínima para Aprovação</label><br>
+            <input type="number" id="media-minima" value="7" min="0" max="10" step="0.1" style="width: 300px; margin-bottom: 15px;">
+            <br>
+    
+            <div style="width: 300px; margin-bottom: 10px;">
+                <label><strong>Notas e Pesos</strong></label> 
+                <button type="button" id="btn-add" style="float: right;">+ Nota</button>
+            </div>
+    
+            <div id="lista-notas"></div>
+            
+            <small>Notas de 0 a 10. Pesos de 1 a 10.</small>
+            <br><br>
+    
+            <div id="painel-previsao" style="display: none; background: #eee; padding: 10px; margin-bottom: 15px; width: 280px;">
+                🔮 Precisa tirar: <strong id="texto-previsao"></strong>
+            </div>
+    
+            <button type="button" id="btn-salvar" style="width: 305px; padding: 10px; cursor: pointer;">
+                <strong>Salvar Matéria</strong>
+            </button>
+            <br><br>
+    
+            <fieldset style="width: 280px;">
+                <legend>Status</legend>
+                <div id="resultado-painel">Aguardando...</div>
+            </fieldset>
+    
+        </form>
+    
+        <hr>
+    
+        <div id="lista-salvas-container">
+            <h3>🗂️ Matérias Salvas</h3>
+            <ul id="lista-salvas">
+                <li>Nenhuma matéria salva.</li>
+            </ul>
+        </div>
+    
+        <script src="script.js"></script>
+    </body>
+    </html>
+   
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
