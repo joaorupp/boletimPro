@@ -4,10 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boletim Pro</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
+    <header class="header-container">
+        <div class="header-left">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+            
+            <div class="titles">
+                <h1 class="main-title">Boletim Pro</h1>
+                <p class="subtitle">Tenha o controle total da sua aprovação escolar</p>
+            </div>
+        </div>
 
+        <div class="score-card">
+            <span class="score-label">Média Geral</span>
+            <span class="score-value">0.0</span>
+        </div>
     </header>
 
     <main>
@@ -27,5 +43,6 @@
     <footer>
 
     </footer>
+    <script src="script.js"></script>
 </body>
 </html>
