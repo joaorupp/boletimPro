@@ -1,166 +1,232 @@
-
-
-// Soma simples de array
+// --- LÓGICA MATEMÁTICA ---
 const sum = (arr) => arr.reduce((acc, curr) => acc + curr, 0);
 
-// Calcula média ponderada: (n1*p1 + n2*p2) / (p1+p2)
 const calcularMediaPonderada = (notas) => {
     const totalPesos = sum(notas.map(n => n.peso));
     const totalValor = sum(notas.map(n => n.valor * n.peso));
     return totalPesos === 0 ? 0 : (totalValor / totalPesos);
 };
 
-// Determina o status baseado na média e na regra de negócio
+// Define status e cor
 const obterStatus = (media, minimo) => {
-    if (media >= minimo) return { texto: "Aprovado", cor: "green", icon: "🟢" };
-    if (media >= 5) return { texto: "Recuperação", cor: "orange", icon: "🟠" };
-    return { texto: "Reprovado", cor: "red", icon: "🔴" };
+    if (media >= minimo) return { texto: "Aprovado", cor: "#10b981", class: "status-aprovado" };
+    if (media >= 5) return { texto: "Recuperação", cor: "#f59e0b", class: "status-recuperacao" };
+    return { texto: "Reprovado", cor: "#ef4444", class: "status-reprovado" };
 };
 
-// Calcula quanto falta para passar (assumindo peso 1 para a próxima prova)
 const calcularNotaNecessaria = (notas, mediaAlvo) => {
     const somaAtual = sum(notas.map(n => n.valor * n.peso));
     const pesoAtual = sum(notas.map(n => n.peso));
-    const pesoProxima = 1; // Assumimos peso 1 para a próxima prova
-    
-    // Fórmula inversa da média ponderada
-    // Alvo = (SomaAtual + X * PesoProx) / (PesoAtual + PesoProx)
+    const pesoProxima = 1; 
     const notaNecessaria = (mediaAlvo * (pesoAtual + pesoProxima) - somaAtual) / pesoProxima;
-    
-    return Math.max(0, notaNecessaria); // Não retorna negativo
+    return Math.max(0, notaNecessaria);
 };
 
-
-/**
- * ------------------------------------------------
- * 2. STATE MANAGEMENT (Gerenciamento de Estado)
- * O Estado é imutável. As ações criam um NOVO estado.
- * ------------------------------------------------
- */
-
-// Estado inicial
-let state = {
-    mediaMinima: 7,
-    notas: [
-        { id: 1, valor: 0, peso: 1 },
-        { id: 2, valor: 0, peso: 1 }
-    ]
+// --- ESTADO GLOBAL DA APLICAÇÃO ---
+let appState = {
+    // Estado do Formulário Atual
+    form: {
+        nome: "",
+        mediaMinima: 7,
+        notas: [{ id: 1, valor: 0, peso: 1 }]
+    },
+    // Estado do Banco de Dados (Matérias Salvas)
+    materiasSalvas: [] 
 };
 
-// Função "Reducer"-like para atualizar o estado
-const setState = (newState) => {
-    state = { ...state, ...newState }; // Merge do estado antigo com o novo
-    render(); // A UI reage à mudança de estado
-};
-
-// Actions (Ações do usuário)
+// --- AÇÕES (ACTIONS) ---
 const actions = {
-    adicionarNota: () => {
+    // 1. Ações do Formulário
+    adicionarNotaInput: () => {
         const novaNota = { id: Date.now(), valor: 0, peso: 1 };
-        setState({ notas: [...state.notas, novaNota] });
+        appState.form.notas.push(novaNota);
+        renderForm();
     },
-
-    removerNota: (idParaRemover) => {
-        // Filter cria um novo array sem o item removido (imutabilidade)
-        setState({ notas: state.notas.filter(n => n.id !== idParaRemover) });
+    removerNotaInput: (id) => {
+        appState.form.notas = appState.form.notas.filter(n => n.id !== id);
+        renderForm();
     },
-
-    atualizarNota: (id, campo, valor) => {
-        // Map cria um novo array com o item modificado
-        const notasAtualizadas = state.notas.map(nota => 
-            nota.id === id ? { ...nota, [campo]: Number(valor) } : nota
+    atualizarNotaInput: (id, campo, valor) => {
+        appState.form.notas = appState.form.notas.map(n => 
+            n.id === id ? { ...n, [campo]: Number(valor) } : n
         );
-        setState({ notas: notasAtualizadas });
+        renderResultadoPrevia(); // Atualiza só o preview
+    },
+    atualizarConfigForm: (campo, valor) => {
+        appState.form[campo] = valor;
+        renderResultadoPrevia();
     },
 
-    atualizarMediaMinima: (valor) => {
-        setState({ mediaMinima: Number(valor) });
+    // 2. Ação Principal: SALVAR MATÉRIA
+    salvarMateria: () => {
+        const nome = document.getElementById('materia-nome').value || "Sem Nome";
+        const mediaFinal = calcularMediaPonderada(appState.form.notas);
+        const statusObj = obterStatus(mediaFinal, appState.form.mediaMinima);
+
+        const novaMateria = {
+            id: Date.now(),
+            nome: nome,
+            media: mediaFinal,
+            status: statusObj.texto,
+            numNotas: appState.form.notas.length
+        };
+
+        // Salva na lista global
+        appState.materiasSalvas.push(novaMateria);
+        
+        // Reseta o formulário
+        appState.form.notas = [{ id: Date.now(), valor: 0, peso: 1 }];
+        document.getElementById('materia-nome').value = "";
+        
+        // Atualiza TUDO
+        renderForm();
+        renderBoletim();
+        renderDashboard(); // <--- AQUI A MÁGICA DOS CARDS ACONTECE
+    },
+
+    removerMateriaSalva: (id) => {
+        appState.materiasSalvas = appState.materiasSalvas.filter(m => m.id !== id);
+        renderBoletim();
+        renderDashboard();
+    },
+
+    limparTudo: () => {
+        appState.materiasSalvas = [];
+        renderBoletim();
+        renderDashboard();
     }
 };
 
+// --- RENDERIZAÇÃO (VIEW) ---
 
-/**
- * ------------------------------------------------
- * 3. VIEW / DOM (Efeitos Colaterais)
- * Renderiza o HTML baseado puramente no Estado atual.
- * ------------------------------------------------
- */
-
-const renderListaNotas = () => {
-    const container = document.getElementById('lista-notas');
-    container.innerHTML = ''; // Limpa para redesenhar
-
-    state.notas.forEach(nota => {
+// 1. Renderiza os Inputs de Notas (Formulário)
+const renderForm = () => {
+    const container = document.getElementById('form-lista-notas');
+    container.innerHTML = '';
+    
+    appState.form.notas.forEach(nota => {
         const div = document.createElement('div');
-        div.style.marginBottom = '10px';
+        div.style.display = 'flex';
+        div.style.gap = '5px';
+        div.style.marginBottom = '5px';
         
-        // Input Nota
-        const inputNota = document.createElement('input');
-        inputNota.type = 'number';
-        inputNota.placeholder = 'Nota';
-        inputNota.value = nota.valor;
-        inputNota.oninput = (e) => actions.atualizarNota(nota.id, 'valor', e.target.value);
-
-        // Input Peso
-        const inputPeso = document.createElement('input');
-        inputPeso.type = 'number';
-        inputPeso.placeholder = 'Peso';
-        inputPeso.value = nota.peso;
-        inputPeso.style.marginLeft = '5px';
-        inputPeso.oninput = (e) => actions.atualizarNota(nota.id, 'peso', e.target.value);
-
-        // Botão Remover
-        const btnDelete = document.createElement('button');
-        btnDelete.innerText = '🗑️';
-        btnDelete.type = 'button';
-        btnDelete.style.marginLeft = '5px';
-        btnDelete.onclick = () => actions.removerNota(nota.id);
-
-        div.append(inputNota, inputPeso, btnDelete);
+        div.innerHTML = `
+            <input type="number" placeholder="Nota" value="${nota.valor}" 
+                oninput="actions.atualizarNotaInput(${nota.id}, 'valor', this.value)" style="flex:1;">
+            <input type="number" placeholder="Peso" value="${nota.peso}" 
+                oninput="actions.atualizarNotaInput(${nota.id}, 'peso', this.value)" style="width: 50px;">
+            <button onclick="actions.removerNotaInput(${nota.id})" style="background:#fee2e2; border:none; color:red;">X</button>
+        `;
         container.appendChild(div);
     });
+    renderResultadoPrevia();
 };
 
-const renderResultados = () => {
-    const media = calcularMediaPonderada(state.notas);
-    const status = obterStatus(media, state.mediaMinima);
-    const necessaria = calcularNotaNecessaria(state.notas, state.mediaMinima);
-
-    // Atualiza Painel de Status
+// 2. Renderiza o Preview do Cálculo (Embaixo dos inputs)
+const renderResultadoPrevia = () => {
+    const media = calcularMediaPonderada(appState.form.notas);
+    const necessaria = calcularNotaNecessaria(appState.form.notas, appState.form.mediaMinima);
     const painel = document.getElementById('resultado-painel');
-    painel.innerHTML = `
-        <div style="font-family: sans-serif;">
-            <div style="font-size: 1.2em; margin-bottom: 5px;">Média Atual: <strong>${media.toFixed(2)}</strong></div>
-            <div style="color: ${status.cor}; font-weight: bold;">
-                ${status.icon} ${status.texto}
-            </div>
-        </div>
-    `;
-
-    // Atualiza Painel de Previsão ("Quanto preciso tirar")
     const painelPrev = document.getElementById('painel-previsao');
-    const textoPrev = document.getElementById('texto-previsao');
+
+    painel.innerHTML = `<strong>Média Atual: ${media.toFixed(2)}</strong>`;
     
-    // Só mostra a previsão se ainda não passou
-    if (media < state.mediaMinima) {
+    if (media < appState.form.mediaMinima) {
         painelPrev.style.display = 'block';
-        textoPrev.innerHTML = `Para atingir ${state.mediaMinima}, sua próxima nota (peso 1) precisa ser: <strong>${necessaria.toFixed(1)}</strong>`;
+        painelPrev.innerHTML = `Falta para passar: <strong>${necessaria.toFixed(1)}</strong> (na prox. prova)`;
     } else {
         painelPrev.style.display = 'none';
     }
 };
 
-// Função principal de renderização
-const render = () => {
-    renderListaNotas();
-    renderResultados();
+// 3. Renderiza a Lista de Matérias (Lado Direito)
+const renderBoletim = () => {
+    const container = document.getElementById('lista-boletim');
+    if (appState.materiasSalvas.length === 0) {
+        container.innerHTML = '<p style="color: #888;">Nenhuma matéria cadastrada.</p>';
+        return;
+    }
+
+    container.innerHTML = '';
+    appState.materiasSalvas.forEach(m => {
+        const item = document.createElement('div');
+        // Estilo inline básico para parecer uma lista
+        item.style.cssText = "background: white; border: 1px solid #eee; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-radius: 4px;";
+        
+        // Cor do status
+        let corStatus = m.status === 'Aprovado' ? 'green' : (m.status === 'Recuperação' ? 'orange' : 'red');
+
+        item.innerHTML = `
+            <div>
+                <strong>${m.nome}</strong><br>
+                <small>${m.numNotas} notas lançadas</small>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 1.2em; font-weight: bold; color: ${corStatus}">${m.media.toFixed(1)}</div>
+                <small style="color: ${corStatus}">${m.status}</small>
+            </div>
+            <button onclick="actions.removerMateriaSalva(${m.id})" style="margin-left: 10px; background: none; border: none; cursor: pointer;">🗑️</button>
+        `;
+        container.appendChild(item);
+    });
 };
 
-// Inicialização (Setup dos listeners globais)
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('btn-add').onclick = actions.adicionarNota;
-    document.getElementById('media-minima').oninput = (e) => actions.atualizarMediaMinima(e.target.value);
+// 4. Renderiza o DASHBOARD (Os Cards - Sua Tarefa Principal)
+const renderDashboard = () => {
+    const materias = appState.materiasSalvas;
     
-    // Renderiza a primeira vez
-    render();
+    // Se não tem matérias, reseta os cards
+    if (materias.length === 0) {
+        document.getElementById('dash-best-value').innerText = "--";
+        document.getElementById('dash-best-name').innerText = "Nenhuma matéria";
+        document.getElementById('dash-worst-value').innerText = "--";
+        document.getElementById('dash-worst-name').innerText = "Nenhuma matéria";
+        document.getElementById('dash-rate-value').innerText = "0%";
+        document.getElementById('dash-rate-detail').innerText = "0 de 0 matérias";
+        document.getElementById('count-aprovado').innerText = "0";
+        document.getElementById('count-recuperacao').innerText = "0";
+        document.getElementById('count-reprovado').innerText = "0";
+        return;
+    }
+
+    // Cálculos
+    const melhor = materias.reduce((prev, curr) => (prev.media > curr.media) ? prev : curr);
+    const pior = materias.reduce((prev, curr) => (prev.media < curr.media) ? prev : curr);
+    
+    const aprovados = materias.filter(m => m.status === 'Aprovado').length;
+    const recuperacao = materias.filter(m => m.status === 'Recuperação').length;
+    const reprovados = materias.filter(m => m.status === 'Reprovado').length;
+    const taxa = Math.round((aprovados / materias.length) * 100);
+
+    // Atualiza HTML
+    // Card 1
+    document.getElementById('dash-best-value').innerText = melhor.media.toFixed(1);
+    document.getElementById('dash-best-name').innerText = melhor.nome;
+    
+    // Card 2
+    document.getElementById('dash-worst-value').innerText = pior.media.toFixed(1);
+    document.getElementById('dash-worst-name').innerText = pior.nome;
+    
+    // Card 3
+    document.getElementById('dash-rate-value').innerText = `${taxa}%`;
+    document.getElementById('dash-rate-detail').innerText = `${aprovados} de ${materias.length} matérias`;
+    
+    // Card 4
+    document.getElementById('count-aprovado').innerText = aprovados;
+    document.getElementById('count-recuperacao').innerText = recuperacao;
+    document.getElementById('count-reprovado').innerText = reprovados;
+};
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btn-add-nota').onclick = actions.adicionarNotaInput;
+    document.getElementById('btn-salvar-materia').onclick = actions.salvarMateria;
+    
+    document.getElementById('media-minima').oninput = (e) => 
+        actions.atualizarConfigForm('mediaMinima', Number(e.target.value));
+
+    // Renderiza o estado inicial
+    renderForm();
+    renderBoletim();
+    renderDashboard();
 });
