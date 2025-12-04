@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre - Boletim Pro | Turma AATIV2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- CABEÇALHO -->
+    <header class="bg-indigo-900 text-white shadow-lg">
+        <div class="max-w-4xl mx-auto px-6 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div>
+                    <h1 class="text-4xl font-bold mb-2"><i class="fas fa-file-alt mr-3"></i>Boletim Pro</h1>
+                    <p class="text-indigo-200 text-lg">Documentação do Projeto - Ideathon Front-End</p>
+                </div>
+                <div class="mt-4 md:mt-0 bg-indigo-800 px-6 py-3 rounded-lg border border-indigo-600 text-center">
+                    <span class="block text-xs uppercase tracking-wider text-indigo-300">Turma</span>
+                    <span class="text-2xl font-bold">AATIV2</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-10">
+
+        <!-- BOTÃO PARA ACESSAR O APP -->
+        <div class="mb-10 text-center">
+            <p class="mb-4 text-gray-600">O projeto foi desenvolvido e já está funcional.</p>
+            <a href="app_boletim.html" class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform hover:-translate-y-1 transition duration-200">
+                <i class="fas fa-play-circle mr-2"></i> Testar o Boletim Agora
+            </a>
+        </div>
+
+        <!-- FICHA DE PROPOSTA -->
+        <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
+            <div class="bg-indigo-600 px-6 py-4 border-b border-indigo-700">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-clipboard-check mr-2"></i> Ficha de Proposta de Projeto
+                </h2>
+            </div>
+
+            <div class="p-8 space-y-8">
+                
+                <!-- 1. Identidade -->
+                <section>
+                    <h3 class="text-lg font-bold text-indigo-900 mb-3 border-b border-gray-200 pb-1">1. Identidade do Projeto</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <span class="block text-xs font-bold text-gray-500 uppercase">Nome</span>
+                            <span class="text-lg font-medium text-gray-900">Boletim Pro (MyGradeCalc)</span>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <span class="block text-xs font-bold text-gray-500 uppercase">Slogan</span>
+                            <span class="text-lg font-medium text-gray-900 italic">"Simule suas médias e organize suas notas escolares em segundos."</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Problema e Solução -->
+                <section>
+                    <h3 class="text-lg font-bold text-indigo-900 mb-3 border-b border-gray-200 pb-1">2. O Problema e a Solução</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-500 mt-1 mr-3">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Problema</h4>
+                                <p class="text-gray-600 text-sm">Alunos frequentemente têm dificuldade em calcular rapidamente suas médias finais ou prever quanto precisam tirar na próxima prova, ficando perdidos em meio a várias matérias.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-500 mt-1 mr-3">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Solução</h4>
+                                <p class="text-gray-600 text-sm">Uma interface web simples onde o aluno cadastra a matéria e suas notas. O sistema calcula a média automaticamente e mostra visualmente se ele está "Aprovado" ou "Reprovado".</p>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- 3. Funcionalidades -->
+                <section>
+                    <h3 class="text-lg font-bold text-indigo-900 mb-3 border-b border-gray-200 pb-1">3. Funcionalidades (JavaScript)</h3>
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+                            <li><strong class="text-indigo-700">Entrada de Dados:</strong> Formulário para Disciplina, Nota 1 e Nota 2.</li>
+                            <li><strong class="text-indigo-700">Lógica Principal:</strong> Cálculo de média aritmética <code>(N1 + N2) / 2</code>.</li>
+                            <li><strong class="text-indigo-700">Validação:</strong> Identificação automática de status (Aprovado/Reprovado).</li>
+                            <li><strong class="text-indigo-700">Interatividade:</strong> Adição dinâmica na tabela e botão de excluir item.</li>
+                            <li><strong class="text-indigo-700">Persistência:</strong> Uso de Vetores (Arrays) na memória RAM (sem banco de dados).</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- 4. Estrutura de Dados -->
+                <section>
+                    <h3 class="text-lg font-bold text-indigo-900 mb-3 border-b border-gray-200 pb-1">4. Estrutura de Dados (Modelo)</h3>
+                    <p class="text-sm text-gray-600 mb-2">Exemplo do objeto JSON armazenado no vetor:</p>
+                    <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs font-mono">
+{
+  id: 167890123,
+  disciplina: "Matemática",
+  nota1: 8.5,
+  nota2: 6.0,
+  mediaFinal: 7.25,
+  situacao: "Aprovado"
+}</pre>
+                </section>
+
+            </div>
+            
+            <div class="bg-gray-100 px-6 py-4 border-t border-gray-200 text-center text-sm text-gray-500">
+                Regra de Ouro: Projeto Estático (HTML, CSS e JS) hospedado no GitHub Pages.
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm bg-gray-200 mt-10">
+        <p>&copy; 2024 Ideathon Front-End - Turma AATIV2.</p>
+    </footer>
+
+</body>
+</html>
